@@ -1,0 +1,274 @@
+%===== Chapter 4: Implementation and Key Features =====%
+
+\chapter{Implementation and Key Features}
+
+\section*{Introduction}
+This chapter covers the concrete implementation of all three services, from
+NestJS module internals to Next.js storefront patterns and admin dashboard features.
+
+\section{Technology Stack}
+
+\subsection{Backend Stack}
+
+\begin{longtable}{|m{4.5cm}|m{2cm}|m{7cm}|}
+    \hline
+    \textbf{Technology} & \textbf{Version} & \textbf{Role} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    Node.js & 20 LTS & Runtime \\
+    \hline
+    TypeScript & 5.7 & Language \\
+    \hline
+    NestJS & 11 & Web framework + DI container \\
+    \hline
+    MongoDB & 7.0 & Primary database \\
+    \hline
+    Mongoose & --- & ODM \\
+    \hline
+    Passport.js + JWT & --- & Authentication strategies \\
+    \hline
+    express-session + connect-mongo & --- & Guest session persistence \\
+    \hline
+    Socket.IO & --- & WebSocket / real-time \\
+    \hline
+    Multer + Sharp & --- & File upload and image optimisation \\
+    \hline
+    Nodemailer & --- & SMTP email \\
+    \hline
+    Discord.js & --- & Support bot \\
+    \hline
+    PDFKit & --- & Invoice and credit-note PDF generation \\
+    \hline
+    class-validator & --- & DTO validation \\
+    \hline
+    Helmet & --- & HTTP security headers \\
+    \hline
+    \caption{Backend technology stack}
+    \label{tab:backend_stack}
+\end{longtable}
+
+\subsection{Frontend and Admin Stack}
+
+\begin{longtable}{|m{4.5cm}|m{9cm}|}
+    \hline
+    \textbf{Technology} & \textbf{Role} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    Next.js 16 + React 19 & Framework (App Router, SSR/SSG) \\
+    \hline
+    Tailwind CSS + Radix UI & Styling and accessible components \\
+    \hline
+    Zustand & Client state (cart, wishlist, UI) \\
+    \hline
+    React Query & Server state management \\
+    \hline
+    Axios & HTTP client \\
+    \hline
+    Socket.IO client & Real-time support chat \\
+    \hline
+    DataTables.net + ApexCharts & Admin tables and analytics charts \\
+    \hline
+    react-dropzone + react-easy-crop & Image upload and cropping \\
+    \hline
+    Barcode scanning libraries & Admin barcode/QR lookup \\
+    \hline
+    \caption{Frontend and admin technology stack}
+    \label{tab:frontend_stack}
+\end{longtable}
+
+\section{Backend Implementation}
+
+\subsection{Application Bootstrap}
+
+The NestJS application is configured at startup with several cross-cutting concerns,
+including Helmet for HTTP security headers, CORS restricted to known frontend origins,
+global ValidationPipe for DTO validation, express-session stored in MongoDB, and a
+custom Socket.IO adapter for WebSocket support.
+
+\subsection{Authentication Module}
+
+The authentication module implements two strategies running in parallel:
+
+\textbf{JWT Strategy} (registered users and admins): \texttt{POST /auth/login}
+validates credentials and returns a signed JWT. The \texttt{JwtStrategy} extracts
+the Bearer token from the \texttt{Authorization} header on every protected request.
+Admin routes use a separate \texttt{AdminAuthGuard} that additionally checks the
+\texttt{role} field.
+
+\textbf{Session Strategy} (guest visitors): On the first request, express-session
+creates a session document in MongoDB and sets a cookie. The \texttt{SessionGuard}
+reads the session ID from the cookie to associate basket operations with a guest.
+When a guest registers or logs in, their session basket is merged into their account
+basket.
+
+\subsection{Product Catalog Module}
+
+Key implementation details:
+
+\begin{itemize}
+    \item \textbf{Slug generation:} Product and category slugs are auto-generated from names, ensuring SEO-friendly URLs.
+    \item \textbf{Image handling:} Uploads are processed through Sharp (resize to max 1200px width, WebP conversion, quality 80) and stored on disk.
+    \item \textbf{Atomic stock management:} Stock is decremented using MongoDB's \texttt{findOneAndUpdate} with \texttt{\$inc} and a \texttt{quantity >= requested} filter, preventing overselling without distributed transactions.
+    \item \textbf{Barcode lookup:} The \texttt{BarcodeLookuService} calls the GO\_UPC API to pre-fill the admin product creation form from an EAN/UPC scan.
+    \item \textbf{3D Model viewer:} GLB model files are stored and rendered client-side using a WebGL-based component.
+    \item \textbf{Search:} MongoDB's \texttt{\$text} index with text score sort for relevance ranking.
+\end{itemize}
+
+\subsection{Commerce Module}
+
+\subsubsection{Order Placement Sequence}
+
+Order placement follows this transactional sequence:
+
+\begin{enumerate}
+    \item Load the current basket.
+    \item For each item, verify stock availability (\texttt{stock.quantity >= requested}).
+    \item Compute line totals and apply any active promotion discount.
+    \item Look up the shipping rate for the selected governorate.
+    \item Validate and apply a coupon code (if provided), recording usage.
+    \item Persist the \texttt{Order} document with status \texttt{pending}.
+    \item Atomically decrement stock for each ordered item.
+    \item Clear the basket.
+    \item Fire-and-forget: send order confirmation email via \texttt{MailService}.
+\end{enumerate}
+
+\subsubsection{Invoice and PDF Generation}
+
+When an order is confirmed, an invoice document is created with a sequential number
+(counter pattern). PDFKit generates a formatted PDF including the store logo, customer
+billing address, line items, subtotal, shipping fee, coupon discount, TVA, and grand
+total. The same pattern applies to credit notes.
+
+\subsection{Support Module (WebSocket + Discord Bot)}
+
+The support gateway is a Socket.IO server co-located in the support module.
+Customer messages received over WebSocket are saved to the database, forwarded to
+all members of the ticket room, and simultaneously sent to a Discord channel via
+Discord.js. Replies from Discord agents are forwarded back to the WebSocket room,
+completing the bidirectional loop.
+
+\section{Storefront Implementation}
+
+\subsection{Homepage and Product Pages}
+
+The homepage assembles several independently fetched data sources using React Server
+Components: hero banner carousel, featured categories grid, latest promotions section,
+featured products, and latest blog articles.
+
+The product detail page (\texttt{/product/[slug]}) is server-rendered and includes
+an image gallery, price with crossed-out original price if discounted, stock
+availability badge, Add to Cart / Wishlist buttons, an optional 3D model viewer,
+and related products.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Screenshot: Storefront homepage — hero banner and featured products]}
+\vspace{2.5cm}}}
+\caption{Malltech customer storefront homepage}
+\label{fig:storefront_home}
+\end{figure}
+
+\subsection{Cart and Checkout}
+
+The cart page reads from the Zustand store (synced with the API). The checkout form
+collects the delivery address, a governorate dropdown, and an optional coupon code
+field with real-time validation. On submission, the form posts to \texttt{POST /orders}.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Screenshot: Cart page and Checkout form]}
+\vspace{2.5cm}}}
+\caption{Cart and checkout pages}
+\label{fig:checkout}
+\end{figure}
+
+\section{Admin Dashboard Implementation}
+
+\subsection{Dashboard Overview}
+
+The admin homepage displays key KPIs (total orders, revenue, new customers,
+low-stock alerts) and charts (ApexCharts): a daily orders trend line, revenue bar
+chart, and top products donut chart.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Screenshot: Admin dashboard with KPI cards and charts]}
+\vspace{2.5cm}}}
+\caption{Administration dashboard overview}
+\label{fig:admin_dashboard}
+\end{figure}
+
+\subsection{Product Management and Barcode Scanner}
+
+The product list uses DataTables.net with server-side pagination, search by name/SKU,
+and filter by category, brand, and status. The product creation/edit form handles
+multi-image upload with drag-and-drop and in-browser cropping.
+
+The \textbf{barcode scanner page} activates the device camera, decodes the barcode
+using a cascade of three libraries (\texttt{@yudiel/react-qr-scanner},
+\texttt{@undecaf/zbar-wasm}, \texttt{@zxing/library}), calls the GO\_UPC lookup
+API, and pre-populates a new product form — eliminating manual data entry.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Screenshot: Admin product list and barcode scanner page]}
+\vspace{2.5cm}}}
+\caption{Admin product management and barcode scanner}
+\label{fig:admin_products}
+\end{figure}
+
+\subsection{Order Management}
+
+The orders page features a filterable DataTable (by status, date range, customer).
+Each order detail page provides a full order breakdown, a status update dropdown
+with confirmation dialog, one-click PDF invoice download, and a credit note issuance
+form.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Screenshot: Admin order detail with status update and invoice button]}
+\vspace{2.5cm}}}
+\caption{Admin order management page}
+\label{fig:admin_orders}
+\end{figure}
+
+\section{Notable Implementation Decisions}
+
+\subsection{Session + JWT Coexistence}
+Running both express-session and JWT Passport on the same NestJS app required
+careful middleware ordering. Sessions are initialised before Passport, and guards
+are applied at the route level to avoid session middleware overhead on API routes
+that do not need it.
+
+\subsection{Atomic Stock Decrement}
+Stock decrement uses MongoDB's \texttt{findOneAndUpdate} with \texttt{\$inc} and a
+\texttt{quantity >= requestedQty} filter. If the filter matches zero documents
+(insufficient stock), the operation fails and the order is rejected --- preventing
+overselling without a distributed transaction.
+
+\subsection{PDF Generation Without External Services}
+Invoice and credit-note PDFs are generated entirely on the backend using PDFKit,
+with no dependency on external PDF services. This keeps the system self-contained
+and avoids per-document costs.
+
+\subsection{Multi-Library Barcode Scanning}
+The admin barcode scanner uses three libraries in cascade because no single library
+had reliable support across all target devices and browsers. The cascade tries each
+library in order until a successful decode is returned.
+
+\section*{Conclusion}
+This chapter covered the implementation of all three services --- from NestJS module
+internals (authentication, stock management, invoice generation, real-time support)
+to Next.js storefront patterns and admin dashboard features (DataTables, barcode
+scanning, PDF invoicing). The next chapter covers testing and deployment.

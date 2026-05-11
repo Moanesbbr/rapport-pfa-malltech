@@ -1,0 +1,91 @@
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## Intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+# these rules might exclude image files for 2D/3D graphics with extensions
+# that match those of the typeset auxiliary files, e.g. *.ps, *.eps.
+# (Wait, if the user has images in an 'img' folder, we should be careful,
+# but usually .ps and .eps are intermediate if generated from others).
+# Let's keep it safe.
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## Association matrices & Index files:
+*.idx
+*.ilg
+*.ind
+*.ist
+*.glg
+*.glo
+*.gls
+*.nlg
+*.nlo
+*.nls
+
+## Journal-specific auxiliary files:
+*.acn
+*.acr
+*.alg
+*.atfi
+*.ent
+*.pdfatfi
+*.snm
+*.nav
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.pdfsync
+
+## Listing package:
+*.lol
+
+## Pythontex:
+*.pytxcode
+pythontex-files-*/
+
+## Thumbs:
+thumbs.db
+
+## OS generated files:
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+## Folder-specific:
+# Ignore the final PDF if you want it to be built only locally.
+# Usually, for reports, it's better to exclude it.
+*.pdf
+
+# Minitoc auxiliary files
+*.maf
+*.mtc
+*.mtc*
+*.mlf
+*.mlt

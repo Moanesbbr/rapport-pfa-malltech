@@ -1,0 +1,157 @@
+%===== Chapter 1: Project Framework and Context =====%
+
+\chapter{Project Framework and Context}
+
+\section*{Introduction}
+This chapter introduces the host company, presents the project, analyses the
+existing market solutions, and justifies the chosen development methodology and
+technology stack.
+
+\section{Host Company: Anter Lab}
+
+\textbf{Anter Lab} is a Tunisian technology company founded by two entrepreneurs,
+headquartered in Montplaisir, Tunis. The company empowers Small and Medium Enterprises
+(SMEs) with smart HR solutions and delivers web, mobile, and marketing services,
+blending innovation with creative strategy.
+
+The company's dual focus on both product development and service delivery creates a
+fertile environment for ambitious engineering projects such as Malltech.
+
+\begin{longtable}{|m{3.5cm}|m{10cm}|}
+    \hline
+    \textbf{Field} & \textbf{Details} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    Company & Anter Lab \\
+    \hline
+    Type & Private technology company \\
+    \hline
+    Founded & Tunis, Tunisia \\
+    \hline
+    Address & Montplaisir, Bab El Bhar, Tunis, 1073 \\
+    \hline
+    Services & HR SaaS, web/mobile development, digital marketing \\
+    \hline
+    \caption{Anter Lab company profile}
+    \label{tab:company_profile}
+\end{longtable}
+
+\section{Project Presentation}
+
+\textbf{Malltech} is a multi-service e-commerce platform designed for the Tunisian
+market. The name combines \textit{mall} (a unified commercial space) with
+\textit{tech} (modern software engineering). The platform targets two audiences
+simultaneously:
+
+\begin{itemize}
+    \item \textbf{End customers} — who browse products, manage a cart and wishlist, place orders, and track deliveries through the storefront.
+    \item \textbf{Merchants and administrators} — who manage the entire catalog, order lifecycle, customer base, promotional campaigns, content, and business configuration through the backoffice dashboard.
+\end{itemize}
+
+\section{Study of Existing Solutions}
+
+Before designing Malltech, a comparative analysis of available platforms was conducted:
+
+\begin{longtable}{|m{2.8cm}|m{1.5cm}|m{4cm}|m{4.5cm}|}
+    \hline
+    \textbf{Platform} & \textbf{Type} & \textbf{Strengths} & \textbf{Weaknesses for Tunisia} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    Shopify & SaaS & Polished UX, large ecosystem & Monthly cost in USD, no local payment context \\
+    \hline
+    WooCommerce & Open-source & Free, flexible & Requires WordPress, hard to scale \\
+    \hline
+    Magento & Open-source & Enterprise-grade & Very heavy, expensive hosting \\
+    \hline
+    Custom PHP & Bespoke & Tailored & No modern stack, no CI/CD \\
+    \hline
+    Social media & Free & Zero setup & No inventory, no analytics \\
+    \hline
+    \caption{Comparison of existing e-commerce solutions}
+    \label{tab:existing_solutions}
+\end{longtable}
+
+\textbf{Conclusion:} None of the existing solutions offered a modern TypeScript
+full-stack architecture, native support for Tunisian commercial workflows, and the
+ability to be self-hosted affordably. Building a custom platform was justified.
+
+\section{Development Methodology}
+
+\subsection{Chosen Approach: Iterative and Incremental}
+
+Given that this is a solo development project with evolving requirements, a
+\textbf{lightweight iterative approach} was adopted, inspired by Agile principles
+but without formal sprint ceremonies. Development was organised into functional
+milestones:
+
+\begin{enumerate}
+    \item \textbf{Milestone 1} — Core infrastructure: project scaffolding, Docker setup, authentication, user models.
+    \item \textbf{Milestone 2} — Product catalog: categories, subcategories, brands, products, stock management, 3D model support.
+    \item \textbf{Milestone 3} — Commerce engine: basket, orders, promotions, coupons, shipping rates, wishlist.
+    \item \textbf{Milestone 4} — Financial layer: invoices, credit notes, PDF generation, selling points.
+    \item \textbf{Milestone 5} — Customer storefront: all public-facing Next.js pages.
+    \item \textbf{Milestone 6} — Admin dashboard: all backoffice Next.js pages.
+    \item \textbf{Milestone 7} — Ancillary services: support bot, email notifications, CMS, analytics.
+    \item \textbf{Milestone 8} — Infrastructure: CI/CD pipelines, monitoring, auto-healing, Caddy reverse proxy.
+\end{enumerate}
+
+\subsection{Version Control}
+
+Git was used for version control across three GitHub repositories (one per service).
+Each repository has its own independent CI/CD pipeline via GitHub Actions.
+
+\section{Technology Choices Rationale}
+
+\subsection{Backend — NestJS + MongoDB}
+
+\textbf{NestJS} was chosen for its opinionated module system, built-in dependency
+injection, decorator-based route definitions, and first-class TypeScript support.
+These features promote code organisation and maintainability in a large codebase.
+
+\textbf{MongoDB} was chosen because the product catalog (nested attributes, variable
+schema per category, embedded stock) maps naturally to documents. Mongoose provides
+schema validation at the application layer without requiring migrations.
+
+\subsection{Frontend and Admin — Next.js}
+
+\textbf{Next.js 16} with the App Router was chosen for server-side rendering (SSR)
+and static generation (SSG) for SEO, React Server Components for reduced client-side
+JavaScript, built-in image optimisation, and a unified framework for both the
+storefront and the admin.
+
+\subsection{Infrastructure — Docker + Caddy + GitHub Actions}
+
+\textbf{Docker} isolates each service and guarantees environment parity between
+local development and production. \textbf{Caddy} provides zero-configuration
+automatic HTTPS via Let's Encrypt. \textbf{GitHub Actions} delivers CI/CD directly
+integrated with the source repositories at no additional tooling cost.
+
+\section{Project Architecture Overview}
+
+Malltech is composed of three independently deployable services, all running inside
+a shared Docker network on a single VPS:
+
+\begin{figure}[H]
+\centering
+% Replace with actual architecture diagram when available
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
+\textit{[Architecture Diagram Placeholder]}\\
+\small Internet $\rightarrow$ Caddy (80/443) $\rightarrow$ \{Frontend :3000, Admin :3000, API :3000\}\\
+API $\rightarrow$ MongoDB\\
+Netdata (monitoring)
+\vspace{2cm}}}
+\caption{High-level deployment architecture of Malltech}
+\label{fig:architecture}
+\end{figure}
+
+\section*{Conclusion}
+This chapter presented the host company Anter Lab, the motivation behind Malltech,
+justified the technology choices through a competitive analysis, and described the
+iterative development methodology used throughout the project. The following chapter
+details the functional and non-functional requirements identified for the platform.

@@ -1,0 +1,90 @@
+%===== General Introduction =====%
+
+\chapter*{General Introduction}
+\addcontentsline{toc}{chapter}{General Introduction}
+\markboth{GENERAL INTRODUCTION}{}
+
+\section*{Context}
+
+The rapid growth of internet access and smartphone adoption across the MENA region
+has transformed consumer behaviour. Tunisia, with a growing middle class and
+increasing digital literacy, presents a fertile ground for e-commerce. Yet most
+local merchants still rely on fragmented solutions --- social media shops, manual
+invoicing, and phone-based order management --- that cannot scale, offer no
+real-time inventory visibility, and provide a poor customer experience.
+
+This project, \textbf{Malltech}, was undertaken as a second-year internship at
+\textbf{Anter Lab} to design and build a production-grade, full-stack e-commerce
+platform purpose-built for the Tunisian market, covering the complete commercial
+lifecycle from product discovery to order fulfilment, invoicing, and after-sale support.
+
+\section*{Problem Statement}
+
+Existing e-commerce solutions available to Tunisian merchants are either generic
+international platforms (Shopify, WooCommerce) that require significant configuration
+overhead and do not natively handle local payment workflows, custom legacy systems
+that are tightly coupled and hard to maintain, or social media storefronts that
+provide zero inventory management or analytics.
+
+The gap is a modern, self-hosted, open-architecture platform that:
+\begin{enumerate}
+    \item Handles the Tunisian commerce context (governorate-based delivery, local selling points, TND currency).
+    \item Provides a polished customer-facing storefront with full-text search, promotions, and a wishlist.
+    \item Offers a feature-complete administration dashboard.
+    \item Can be maintained and extended by a small engineering team.
+    \item Is deployable on affordable infrastructure with zero-downtime releases.
+\end{enumerate}
+
+\section*{Project Objectives}
+
+\textbf{Primary objectives:}
+\begin{itemize}
+    \item Design and implement a RESTful API handling all business logic (catalog, commerce, authentication, support, CMS).
+    \item Build a customer storefront covering the full shopping journey: browse $\rightarrow$ cart $\rightarrow$ checkout $\rightarrow$ order tracking.
+    \item Build an administration dashboard covering catalog management, order processing, customer management, content publishing, and analytics.
+\end{itemize}
+
+\textbf{Secondary objectives:}
+\begin{itemize}
+    \item Implement a secure, dual authentication system: JWT for registered users, session-based tracking for guests.
+    \item Integrate automated invoice and credit-note PDF generation.
+    \item Provide real-time customer support via WebSocket and a Discord bot.
+    \item Automate build, test, security scanning, and deployment via GitHub Actions CI/CD.
+    \item Containerise all services with Docker behind a reverse proxy with automatic HTTPS.
+    \item Set up infrastructure-level monitoring and auto-healing.
+\end{itemize}
+
+\section*{Scope and Limitations}
+
+\textbf{In scope:} Full backend API (NestJS + MongoDB), customer storefront (Next.js),
+admin backoffice (Next.js), Docker-based deployment on a single VPS, and CI/CD
+pipelines for all three services.
+
+\textbf{Out of scope:} Native mobile applications, third-party payment gateway
+integration, multi-vendor marketplace functionality, and advanced ML-based
+recommendations.
+
+\section*{Report Organisation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|m{2.5cm}|m{4.5cm}|m{7cm}|}
+    \hline
+    \textbf{Chapter} & \textbf{Title} & \textbf{Content} \\
+    \hline
+    Chapter 1 & Project Framework and Context & Host company, methodology, existing solutions \\
+    \hline
+    Chapter 2 & Requirements Analysis & Actors, functional/non-functional requirements, use cases \\
+    \hline
+    Chapter 3 & System Design and Architecture & Global architecture, database models, API design \\
+    \hline
+    Chapter 4 & Implementation & Technology stack, module-by-module implementation \\
+    \hline
+    Chapter 5 & Testing and Deployment & Test strategy, CI/CD pipeline, infrastructure, monitoring \\
+    \hline
+\end{tabular}
+\caption{Report structure}
+\label{tab:report_structure}
+\end{table}
+
+The report closes with a general conclusion summarising achievements and prospective enhancements.

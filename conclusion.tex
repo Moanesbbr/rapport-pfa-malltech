@@ -1,0 +1,101 @@
+%===== General Conclusion =====%
+
+\chapter*{General Conclusion}
+\addcontentsline{toc}{chapter}{General Conclusion}
+\markboth{GENERAL CONCLUSION}{}
+
+\section*{Summary of Achievements}
+
+This project set out to design and build a production-ready, full-stack e-commerce
+platform tailored for the Tunisian market. Over the course of the internship at
+\textbf{Anter Lab}, the following was delivered:
+
+\textbf{A three-service TypeScript platform:}
+\begin{itemize}
+    \item \texttt{malltech-backend} --- A NestJS 11 RESTful API with 14 feature modules covering every aspect of e-commerce: catalog, commerce, payments, CMS, authentication, notifications, analytics, locations, and real-time customer support. Backed by MongoDB 7.0 with Mongoose ODM.
+    \item \texttt{malltech-frontend} --- A Next.js 16 customer storefront with SSR/SSG for SEO, a full shopping journey (browse $\rightarrow$ cart $\rightarrow$ checkout $\rightarrow$ order tracking), a wishlist, blog, and real-time support chat.
+    \item \texttt{malltech-admin} --- A Next.js 16 backoffice dashboard providing full control over the catalog, order lifecycle, customer management, financial documents (invoices, credit notes), content (banners, blogs, site config), promotions, coupons, and analytics.
+\end{itemize}
+
+\textbf{Infrastructure and DevOps:}
+\begin{itemize}
+    \item Containerised deployment with Docker Compose on a single OVH VPS behind a Caddy reverse proxy with automatic HTTPS.
+    \item Three independent GitHub Actions CI/CD pipelines (test $\rightarrow$ security scan $\rightarrow$ build $\rightarrow$ deploy $\rightarrow$ notify) with zero-downtime rolling updates and automatic rollback.
+    \item Infrastructure-level monitoring with Netdata and a custom auto-healing shell script.
+\end{itemize}
+
+\textbf{Differentiating features for the Tunisian market:}
+\begin{itemize}
+    \item Governorate-based delivery with configurable shipping rates per governorate.
+    \item Cash-at-selling-point payment workflow.
+    \item Sequential invoice and credit-note PDF generation, fully server-side.
+    \item Discord bot integration for customer support.
+    \item Barcode lookup for rapid product data entry in the admin.
+    \item 3D product model viewer for categories that benefit from spatial visualisation.
+\end{itemize}
+
+\section*{Challenges Encountered}
+
+\textbf{Dual authentication coexistence:} Implementing both JWT (registered users)
+and cookie sessions (guests) on the same NestJS application required careful
+middleware and guard ordering to ensure sessions did not add overhead to pure JWT
+routes while remaining available for guest basket operations.
+
+\textbf{Atomic stock management:} Preventing overselling under concurrent order
+placements without distributed transactions required leveraging MongoDB's atomic
+\texttt{findOneAndUpdate} with a conditional filter (\texttt{quantity >= requested}).
+Designing this correctly was critical for data integrity.
+
+\textbf{Real-time support with Discord integration:} Bridging the WebSocket server
+(Socket.IO) with the Discord API (Discord.js) in a bidirectional way required
+careful event routing to ensure messages appeared in the browser chat and vice
+versa, without duplication or loss.
+
+\textbf{CI/CD rollback mechanism:} Implementing a reliable rollback in GitHub
+Actions required snapshotting the previous image digest before pulling the new one,
+so a failed health check could re-tag and restart the previous known-good image ---
+all within a single SSH session.
+
+\section*{Perspectives and Future Enhancements}
+
+While Malltech is production-ready in its current form, several enhancements would
+increase its commercial value:
+
+\begin{longtable}{|m{4cm}|m{9.5cm}|}
+    \hline
+    \textbf{Enhancement} & \textbf{Description} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    Online payment integration & Integration with Tunisian payment gateways (Konnect, Flouci, Paymee) for card-based transactions. \\
+    \hline
+    Multi-vendor marketplace & Extend the platform to support multiple independent sellers with per-seller analytics and payouts. \\
+    \hline
+    Native mobile app & A React Native or Flutter app for iOS and Android, reusing the existing REST API. \\
+    \hline
+    Advanced search & Replace MongoDB text search with Meilisearch for richer filtering, typo tolerance, and faceted search. \\
+    \hline
+    Recommendation engine & ML-based product recommendations based on browsing history and purchase patterns. \\
+    \hline
+    Progressive Web App & Add service workers for offline support, push notifications, and home screen installation. \\
+    \hline
+    Horizontal scaling & Move session storage to Redis and file storage to MinIO/S3 to enable multi-instance API deployment. \\
+    \hline
+    Automated backup & Scheduled \texttt{mongodump} exports to S3-compatible storage for disaster recovery. \\
+    \hline
+    \caption{Planned future enhancements}
+    \label{tab:enhancements}
+\end{longtable}
+
+\section*{Personal Reflection}
+
+This internship provided hands-on experience with the complete software delivery
+lifecycle --- from requirements analysis and architecture design, through full-stack
+implementation across three codebases, to containerised deployment and CI/CD
+automation. Building a real-world platform rather than a toy application forced
+engagement with production concerns that textbooks rarely cover: race conditions
+in inventory management, certificate automation, zero-downtime deployments, and
+security scanning in CI. The result is a platform that is live, functional, and
+ready to serve real customers.

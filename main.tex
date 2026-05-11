@@ -1,0 +1,81 @@
+%=========================================================%
+%   main.tex — Malltech Internship Report                 %
+%   TEK-UP / Anter Lab  —  2nd Year Internship            %
+%   Language: English                                     %
+%=========================================================%
+
+\documentclass[]{./tpl/tekup_internship}
+\graphicspath{{./img/}}
+
+\input{./tpl/new_commands}
+\input{global_config}
+
+\makeindex
+
+\begin{document}
+\sloppy
+
+    %===================== Front Matter ===================%
+    \frontmatter
+        \pagestyle{cover}
+        \input{tpl/cover_page}
+        \restoregeometry
+
+        \pagestyle{frontmatter}
+        \setcounter{page}{1}
+
+        \input{dedication}
+        \clearpage
+
+        \input{acknowledgements}
+        \clearpage
+
+        \setcounter{secnumdepth}{3}
+        \setcounter{tocdepth}{2}
+        \dominitoc
+        \tableofcontents
+        \adjustmtc
+        \clearpage
+
+        \listoffigures
+        \clearpage
+
+        \listoftables
+        \clearpage
+
+        \input{acronyms}
+        \clearpage
+
+    %===================== Main Matter ===================%
+    \mainmatter
+    \pagestyle{fancy}
+
+        \input{introduction}
+        \clearpage
+
+        \input{chapter-01-project-framework}
+        \clearpage
+
+        \input{chapter-02-requirements}
+        \clearpage
+
+        \input{chapter-03-design}
+        \clearpage
+
+        \input{chapter-04-implementation}
+        \clearpage
+
+        \input{chapter-05-testing-deployment}
+        \clearpage
+
+        \input{conclusion}
+        \clearpage
+
+        \printbibliography[title={References},heading=bibintoc]
+        \clearpage
+
+    %===================== Back Matter ===================%
+    \backmatter
+        \input{./tpl/resume}
+
+\end{document}

@@ -1,0 +1,262 @@
+%===== Chapter 3: System Design and Architecture =====%
+
+\chapter{System Design and Architecture}
+
+\section*{Introduction}
+This chapter translates the requirements into a concrete system design, covering
+the global architecture, database schema, API structure, and key interaction flows.
+
+\section{Global Architecture}
+
+\subsection{Three-Service Architecture}
+
+Malltech is decomposed into three independently deployable TypeScript services:
+
+\begin{longtable}{|m{4cm}|m{2.5cm}|m{7cm}|}
+    \hline
+    \textbf{Service} & \textbf{Framework} & \textbf{Role} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{malltech-backend} & NestJS 11 & RESTful API, business logic, WebSocket gateway, MongoDB \\
+    \hline
+    \texttt{malltech-frontend} & Next.js 16 & Customer storefront (SSR/SSG) \\
+    \hline
+    \texttt{malltech-admin} & Next.js 16 & Administration backoffice dashboard \\
+    \hline
+    \caption{Malltech service decomposition}
+    \label{tab:services}
+\end{longtable}
+
+\subsection{Deployment Architecture}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
+\textit{[Deployment Architecture Diagram]}\\
+\small Internet $\rightarrow$ OVH VPS $\rightarrow$ Caddy (reverse proxy, TLS)\\
+Caddy $\rightarrow$ \{malltech-frontend, malltech-admin, malltech-backend\}\\
+malltech-backend $\leftrightarrow$ MongoDB\\
+Netdata (monitoring all containers)\\
+GitHub Actions (CI/CD pipelines)
+\vspace{2cm}}}
+\caption{Malltech deployment architecture}
+\label{fig:deployment}
+\end{figure}
+
+All containers share a \texttt{malltech} Docker bridge network. Only Caddy
+exposes ports 80 and 443 to the host; all other services use internal Docker
+networking exclusively.
+
+\section{Backend Module Design}
+
+The NestJS backend is organised into 14 feature modules, each encapsulating a
+distinct business domain:
+
+\begin{longtable}{|m{3.5cm}|m{10cm}|}
+    \hline
+    \textbf{Module} & \textbf{Responsibilities} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{AuthModule} & JWT strategy, session strategy, guards, password hashing \\
+    \hline
+    \texttt{UsersModule} & Customer CRUD, profile management \\
+    \hline
+    \texttt{CatalogModule} & Categories, subcategories, brands, products, stock, 3D models \\
+    \hline
+    \texttt{BasketModule} & Guest and authenticated basket operations \\
+    \hline
+    \texttt{OrdersModule} & Order placement, status transitions, history \\
+    \hline
+    \texttt{PromotionsModule} & Campaign management, automatic discount application \\
+    \hline
+    \texttt{CouponsModule} & Coupon CRUD, validation, usage tracking \\
+    \hline
+    \texttt{InvoicesModule} & Sequential invoice numbering, PDF generation \\
+    \hline
+    \texttt{CreditNotesModule} & Credit note issuance, PDF generation \\
+    \hline
+    \texttt{SupportModule} & WebSocket gateway, ticket management, Discord bridge \\
+    \hline
+    \texttt{NotificationsModule} & Email templates, SMTP dispatch \\
+    \hline
+    \texttt{CmsModule} & Banners, blogs, authors, site configuration \\
+    \hline
+    \texttt{LocationsModule} & Tunisian governorates, delivery fee configuration \\
+    \hline
+    \texttt{AnalyticsModule} & Event recording, aggregate metrics \\
+    \hline
+    \caption{Backend NestJS modules}
+    \label{tab:modules}
+\end{longtable}
+
+\section{Database Design}
+
+MongoDB is used as the primary database. The following describes the key collections
+and their relationships.
+
+\subsection{Key Collections}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
+\textit{[Entity Relationship Diagram]}\\
+\small Key collections: users, products, categories, subcategories, brands,\\
+stocks, baskets, orders, invoices, creditNotes, coupons, promotions,\\
+supportTickets, supportMessages, banners, blogs, siteConfig, governorates,\\
+analyticsEvents\\
+\vspace{2cm}}}
+\caption{Malltech database entity diagram}
+\label{fig:erd}
+\end{figure}
+
+\subsection{Product Data Model}
+
+The product schema captures the following key fields:
+
+\begin{longtable}{|m{3cm}|m{2.5cm}|m{8cm}|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Description} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{\_id} & ObjectId & MongoDB document identifier \\
+    \hline
+    \texttt{name} & String & Product display name \\
+    \hline
+    \texttt{slug} & String & URL-friendly identifier (indexed, unique) \\
+    \hline
+    \texttt{description} & String & Rich product description \\
+    \hline
+    \texttt{price} & Number & Base price in TND \\
+    \hline
+    \texttt{discountPrice} & Number & Optional promotional price \\
+    \hline
+    \texttt{images} & String{[]} & Array of image URLs \\
+    \hline
+    \texttt{category} & ObjectId & Reference to Category \\
+    \hline
+    \texttt{subcategory} & ObjectId & Reference to Subcategory \\
+    \hline
+    \texttt{brand} & ObjectId & Reference to Brand \\
+    \hline
+    \texttt{modelUrl} & String & Optional GLB 3D model URL \\
+    \hline
+    \texttt{isPublished} & Boolean & Storefront visibility flag \\
+    \hline
+    \caption{Product collection schema (key fields)}
+    \label{tab:product_schema}
+\end{longtable}
+
+\subsection{Order Data Model}
+
+The order schema captures the complete commercial transaction:
+
+\begin{longtable}{|m{3cm}|m{2.5cm}|m{8cm}|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Description} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{user} & ObjectId & Reference to the ordering customer \\
+    \hline
+    \texttt{items} & Array & Line items (product, qty, unitPrice, total) \\
+    \hline
+    \texttt{status} & Enum & pending / confirmed / processing / shipped / delivered / cancelled \\
+    \hline
+    \texttt{deliveryAddress} & Object & Street, city, governorate, postal code \\
+    \hline
+    \texttt{shippingFee} & Number & Computed from governorate rate \\
+    \hline
+    \texttt{coupon} & ObjectId & Applied coupon reference \\
+    \hline
+    \texttt{discount} & Number & Coupon discount amount \\
+    \hline
+    \texttt{subtotal} & Number & Sum of line totals \\
+    \hline
+    \texttt{total} & Number & subtotal + shippingFee - discount \\
+    \hline
+    \caption{Order collection schema (key fields)}
+    \label{tab:order_schema}
+\end{longtable}
+
+\section{API Design}
+
+\subsection{REST API Structure}
+
+The API follows REST conventions with resource-based URL routing:
+
+\begin{longtable}{|m{5cm}|m{2cm}|m{6.5cm}|}
+    \hline
+    \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{/auth/login} & POST & Authenticate and receive JWT \\
+    \hline
+    \texttt{/auth/register} & POST & Create a customer account \\
+    \hline
+    \texttt{/products} & GET & List products (filterable, paginated) \\
+    \hline
+    \texttt{/products/:slug} & GET & Get single product by slug \\
+    \hline
+    \texttt{/basket} & GET/POST/PUT/DELETE & Basket CRUD \\
+    \hline
+    \texttt{/orders} & POST & Place an order \\
+    \hline
+    \texttt{/orders/my} & GET & Customer order history \\
+    \hline
+    \texttt{/admin/orders} & GET & Admin — all orders \\
+    \hline
+    \texttt{/admin/orders/:id/status} & PATCH & Admin — update order status \\
+    \hline
+    \texttt{/admin/invoices/:id/pdf} & GET & Admin — download invoice PDF \\
+    \hline
+    \caption{Selected API endpoints}
+    \label{tab:api_endpoints}
+\end{longtable}
+
+\subsection{Authentication Flow}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
+\textit{[Authentication Sequence Diagram]}\\
+\small JWT Flow: Client $\rightarrow$ POST /auth/login $\rightarrow$ API validates credentials $\rightarrow$ Returns JWT\\
+Subsequent requests: Client sends \texttt{Authorization: Bearer <token>} $\rightarrow$ JwtGuard validates\\
+Guest Flow: First request $\rightarrow$ Session created in MongoDB $\rightarrow$ Cookie set\\
+\vspace{2cm}}}
+\caption{Dual authentication flow}
+\label{fig:auth_flow}
+\end{figure}
+
+\subsection{Order Placement Flow}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
+\textit{[Order Placement Sequence Diagram]}\\
+\small Client $\rightarrow$ POST /orders\\
+1. Load basket \quad 2. Verify stock (atomic) \quad 3. Calculate shipping\\
+4. Apply coupon \quad 5. Persist order \quad 6. Decrement stock\\
+7. Clear basket \quad 8. Send confirmation email (async)\\
+\vspace{2.5cm}}}
+\caption{Order placement sequence}
+\label{fig:order_flow}
+\end{figure}
+
+\section*{Conclusion}
+This chapter presented the three-service architecture, the NestJS module decomposition,
+the MongoDB data model, and the REST API design. The following chapter covers the
+concrete implementation of these designs.

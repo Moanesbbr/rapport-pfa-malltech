@@ -1,0 +1,39 @@
+%===== Abstract Page =====%
+\makeatletter
+\thispagestyle{plain}
+\newgeometry{bottom=25mm,left=20mm,top=25mm,right=20mm}
+
+\begin{changemargin}{3mm}{0cm}
+    \begin{minipage}[c]{0.96\columnwidth}
+
+        {\LARGE\textbf{Abstract}}
+        \vskip2mm
+        \begingroup
+            \large
+            \@englishAbstract
+        \endgroup
+        \vskip2mm
+        {\textbf{Keywords: }
+            \begingroup
+                \@englishAbstractKeywords
+            \endgroup
+        }
+
+        \vskip20mm
+
+        {\LARGE\textbf{R\'esum\'e}}
+        \vskip2mm
+        \begingroup
+            \large
+            \@frenchAbstract
+        \endgroup
+        \vskip2mm
+        {\textbf{Mots cl\'es : }
+            \begingroup
+                \@frenchAbstractKeywords
+            \endgroup
+        }
+
+    \end{minipage}
+\end{changemargin}
+\makeatother

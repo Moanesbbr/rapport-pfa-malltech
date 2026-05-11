@@ -1,0 +1,62 @@
+%================ New Commands File ======================%
+\makeatletter
+
+%================= Metadata Variables ===================%
+\newcommand{\reportType}[1]{\gdef\@reportType{#1}}
+\newcommand{\@reportType}{Internship Report}
+
+\newcommand{\diplomaName}[1]{\gdef\@diplomaName{#1}}
+\newcommand{\@diplomaName}{}
+
+\newcommand{\speciality}[1]{\gdef\@speciality{#1}}
+\newcommand{\@speciality}{}
+
+\newcommand{\proFramerName}[1]{\gdef\@proFramerName{#1}}
+\newcommand{\@proFramerName}{}
+
+\newcommand{\proFramerSpeciality}[1]{\gdef\@proFramerSpeciality{#1}}
+\newcommand{\@proFramerSpeciality}{}
+
+\newcommand{\academicFramerName}[1]{\gdef\@academicFramerName{#1}}
+\newcommand{\@academicFramerName}{}
+
+\newcommand{\academicFramerSpeciality}[1]{\gdef\@academicFramerSpeciality{#1}}
+\newcommand{\@academicFramerSpeciality}{}
+
+\newcommand{\collegeYear}[1]{\gdef\@collegeYear{#1}}
+\newcommand{\@collegeYear}{}
+
+\newcommand{\companyName}[1]{\gdef\@companyName{#1}}
+\newcommand{\@companyName}{}
+
+%================== Abstract Variables ===================%
+\newcommand{\englishAbstract}[1]{\gdef\@englishAbstract{#1}}
+\newcommand{\@englishAbstract}{}
+
+\newcommand{\englishAbstractKeywords}[1]{\gdef\@englishAbstractKeywords{#1}}
+\newcommand{\@englishAbstractKeywords}{}
+
+\newcommand{\frenchAbstract}[1]{\gdef\@frenchAbstract{#1}}
+\newcommand{\@frenchAbstract}{}
+
+\newcommand{\frenchAbstractKeywords}[1]{\gdef\@frenchAbstractKeywords{#1}}
+\newcommand{\@frenchAbstractKeywords}{}
+
+%================ Utility Commands ======================%
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+}%
+\item[]}
+{\end{list}}
+
+\makeatother
+
+\selectlanguage{english}
