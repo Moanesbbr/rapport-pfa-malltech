@@ -6,85 +6,50 @@
 
 \section*{Context}
 
-The rapid growth of internet access and smartphone adoption across the MENA region
-has transformed consumer behaviour. Tunisia, with a growing middle class and
-increasing digital literacy, presents a fertile ground for e-commerce. Yet most
-local merchants still rely on fragmented solutions --- social media shops, manual
-invoicing, and phone-based order management --- that cannot scale, offer no
-real-time inventory visibility, and provide a poor customer experience.
+The rapid growth of internet access and smartphone adoption in Tunisia has significantly transformed consumer purchasing habits and accelerated the development of online commerce. More customers now rely on digital platforms to search for products, compare prices, and place orders remotely. In this evolving environment, companies specialized in technology products increasingly require modern digital solutions to remain competitive and improve customer experience.
 
-This project, \textbf{Malltech}, was undertaken as a second-year internship at
-\textbf{Anter Lab} to design and build a production-grade, full-stack e-commerce
-platform purpose-built for the Tunisian market, covering the complete commercial
-lifecycle from product discovery to order fulfilment, invoicing, and after-sale support.
+\textbf{Malltech} is a Tunisian company specialized in selling technological products such as smartphones, electronics, accessories, and various tech equipment. Despite the growing demand for online shopping, the company lacked a complete digital platform capable of centralizing product management, customer orders, inventory monitoring, and online sales operations.
+
+This project was carried out during an internship at \textbf{Anter Lab} with the objective of designing and developing a complete e-commerce solution for Malltech. The platform includes both a customer-facing e-commerce website and a comprehensive administration backoffice to support and optimize the company’s commercial activities.
 
 \section*{Problem Statement}
 
-Existing e-commerce solutions available to Tunisian merchants are either generic
-international platforms (Shopify, WooCommerce) that require significant configuration
-overhead and do not natively handle local payment workflows, custom legacy systems
-that are tightly coupled and hard to maintain, or social media storefronts that
-provide zero inventory management or analytics.
+Many local businesses still depend on fragmented management methods such as social media pages, manual order processing, spreadsheets, or limited management systems. These approaches often lead to difficulties in inventory tracking, order management, customer follow-up, and business scalability.
 
-The gap is a modern, self-hosted, open-architecture platform that:
+Existing international e-commerce solutions may provide generic functionalities, but they often require expensive customization and are not always adapted to the Tunisian market and local business needs. In addition, some solutions lack flexibility, centralized management, or advanced administrative features.
+
+The main challenge of this project is therefore to develop a modern, scalable, and centralized e-commerce platform that allows Malltech to:
 \begin{enumerate}
-    \item Handles the Tunisian commerce context (governorate-based delivery, local selling points, TND currency).
-    \item Provides a polished customer-facing storefront with full-text search, promotions, and a wishlist.
-    \item Offers a feature-complete administration dashboard.
-    \item Can be maintained and extended by a small engineering team.
-    \item Is deployable on affordable infrastructure with zero-downtime releases.
+    \item Present and sell products online through a modern and responsive storefront.
+    \item Centralize product, inventory, order, and customer management.
+    \item Simplify administrative and operational tasks through a complete backoffice.
+    \item Improve customer experience and strengthen the company’s digital presence.
+    \item Provide a scalable architecture that can evolve with future business requirements.
 \end{enumerate}
+
+\newpage
 
 \section*{Project Objectives}
 
 \textbf{Primary objectives:}
 \begin{itemize}
-    \item Design and implement a RESTful API handling all business logic (catalog, commerce, authentication, support, CMS).
-    \item Build a customer storefront covering the full shopping journey: browse $\rightarrow$ cart $\rightarrow$ checkout $\rightarrow$ order tracking.
-    \item Build an administration dashboard covering catalog management, order processing, customer management, content publishing, and analytics.
+    \item Design and develop a complete e-commerce website for online product sales.
+    \item Build a comprehensive administration backoffice for managing products, categories, inventory, customers, and orders.
+    \item Implement a secure authentication and authorization system for customers and administrators.
+    \item Provide an optimized and responsive user experience across different devices.
 \end{itemize}
 
 \textbf{Secondary objectives:}
 \begin{itemize}
-    \item Implement a secure, dual authentication system: JWT for registered users, session-based tracking for guests.
-    \item Integrate automated invoice and credit-note PDF generation.
-    \item Provide real-time customer support via WebSocket and a Discord bot.
-    \item Automate build, test, security scanning, and deployment via GitHub Actions CI/CD.
-    \item Containerise all services with Docker behind a reverse proxy with automatic HTTPS.
-    \item Set up infrastructure-level monitoring and auto-healing.
+    \item Integrate Search Engine Optimization (SEO) features to improve online visibility.
+    \item Implement analytics and reporting functionalities for business monitoring.
+    \item Develop dynamic content management capabilities for banners, pages, and promotions.
+    \item Automate deployment and development workflows using modern DevOps tools.
+    \item Ensure platform scalability, maintainability, and security.
 \end{itemize}
 
 \section*{Scope and Limitations}
 
-\textbf{In scope:} Full backend API (NestJS + MongoDB), customer storefront (Next.js),
-admin backoffice (Next.js), Docker-based deployment on a single VPS, and CI/CD
-pipelines for all three services.
+\textbf{In scope:} Development of the e-commerce website, administration backoffice, product and inventory management modules, order management system, customer management, SEO features, analytics tools, and deployment infrastructure.
 
-\textbf{Out of scope:} Native mobile applications, third-party payment gateway
-integration, multi-vendor marketplace functionality, and advanced ML-based
-recommendations.
-
-\section*{Report Organisation}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|m{2.5cm}|m{4.5cm}|m{7cm}|}
-    \hline
-    \textbf{Chapter} & \textbf{Title} & \textbf{Content} \\
-    \hline
-    Chapter 1 & Project Framework and Context & Host company, methodology, existing solutions \\
-    \hline
-    Chapter 2 & Requirements Analysis & Actors, functional/non-functional requirements, use cases \\
-    \hline
-    Chapter 3 & System Design and Architecture & Global architecture, database models, API design \\
-    \hline
-    Chapter 4 & Implementation & Technology stack, module-by-module implementation \\
-    \hline
-    Chapter 5 & Testing and Deployment & Test strategy, CI/CD pipeline, infrastructure, monitoring \\
-    \hline
-\end{tabular}
-\caption{Report structure}
-\label{tab:report_structure}
-\end{table}
-
-The report closes with a general conclusion summarising achievements and prospective enhancements.
+\textbf{Out of scope:} Native mobile applications, multi-vendor marketplace functionality, advanced AI recommendation systems, and external payment gateway integrations not required during the initial project phase.

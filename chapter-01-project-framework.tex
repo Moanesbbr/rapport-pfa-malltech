@@ -19,21 +19,21 @@ fertile environment for ambitious engineering projects such as Malltech.
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
     \hline
-    \textbf{Field} & \textbf{Details} \\
+    \textbf{Field} & \textbf{Details}                                   \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Company & Anter Lab \\
+    Company        & Anter Lab                                          \\
     \hline
-    Type & Private technology company \\
+    Type           & Private technology company                         \\
     \hline
-    Founded & Tunis, Tunisia \\
+    Founded        & Tunis, Tunisia                                     \\
     \hline
-    Address & Montplaisir, Bab El Bhar, Tunis, 1073 \\
+    Address        & Montplaisir, Bab El Bhar, Tunis, 1073              \\
     \hline
-    Services & HR SaaS, web/mobile development, digital marketing \\
+    Services       & HR SaaS, web/mobile development, digital marketing \\
     \hline
     \caption{Anter Lab company profile}
     \label{tab:company_profile}
@@ -41,37 +41,48 @@ fertile environment for ambitious engineering projects such as Malltech.
 
 \section{Project Presentation}
 
-\textbf{Malltech} is a multi-service e-commerce platform designed for the Tunisian
-market. The name combines \textit{mall} (a unified commercial space) with
-\textit{tech} (modern software engineering). The platform targets two audiences
-simultaneously:
+\textbf{Malltech} is a Tunisian company specialized in selling technological products such as smartphones, accessories, electronics, and various tech equipment. The objective of this project is to design and develop a complete e-commerce platform for Malltech, allowing the company to strengthen its digital presence and modernize the management of its commercial activities.
+
+The platform consists of two main parts: a customer-facing e-commerce website and a complete management backoffice. The e-commerce website enables customers to browse products, search by categories, manage carts and wishlists, place orders securely, and follow their purchases through a modern and responsive interface.
+
+The backoffice provides administrators and employees with a centralized management system for handling products, inventory, orders, customers, categories, promotions, website content, and business operations. It also includes tools for analytics, reporting, SEO management, and role-based access control to facilitate daily administrative tasks and improve operational efficiency.
+
+The platform targets two main audiences:
 
 \begin{itemize}
-    \item \textbf{End customers} — who browse products, manage a cart and wishlist, place orders, and track deliveries through the storefront.
-    \item \textbf{Merchants and administrators} — who manage the entire catalog, order lifecycle, customer base, promotional campaigns, content, and business configuration through the backoffice dashboard.
+    \item \textbf{Customers} — who can explore Malltech products, place online orders, manage their accounts, and benefit from a seamless shopping experience.
+
+    \item \textbf{Administrators and employees} — who can manage the entire e-commerce activity through a secure and comprehensive backoffice dashboard.
 \end{itemize}
+
+In addition to standard e-commerce functionalities, the platform integrates advanced features such as Search Engine Optimization (SEO), dynamic content management, analytics and reporting modules, and scalable management tools. The goal of the project is to provide Malltech with a modern digital solution capable of improving customer experience, optimizing internal management processes, and supporting the company's business growth.
 
 \section{Study of Existing Solutions}
 
 Before designing Malltech, a comparative analysis of available platforms was conducted:
 
-\begin{longtable}{|m{2.8cm}|m{1.5cm}|m{4cm}|m{4.5cm}|}
+\begin{longtable}{|m{2.5cm}|m{1.8cm}|m{4.8cm}|m{5.2cm}|}
     \hline
-    \textbf{Platform} & \textbf{Type} & \textbf{Strengths} & \textbf{Weaknesses for Tunisia} \\
+    \textbf{Platform} & \textbf{Type} & \textbf{Strengths}           & \textbf{Weaknesses for Tunisia}               \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Platform} & \textbf{Type} & \textbf{Strengths}           & \textbf{Weaknesses for Tunisia}               \\
     \hline
     \endhead
+    \hline
     \endfoot
+    \hline
     \endlastfoot
+    Shopify           & SaaS          & Polished UX, large ecosystem & Monthly cost in USD, no local payment context \\
     \hline
-    Shopify & SaaS & Polished UX, large ecosystem & Monthly cost in USD, no local payment context \\
+    WooCommerce       & Open-source   & Free, flexible               & Requires WordPress, hard to scale             \\
     \hline
-    WooCommerce & Open-source & Free, flexible & Requires WordPress, hard to scale \\
+    Magento           & Open-source   & Enterprise-grade             & Very heavy, expensive hosting                 \\
     \hline
-    Magento & Open-source & Enterprise-grade & Very heavy, expensive hosting \\
+    Custom PHP        & Bespoke       & Tailored                     & No modern stack, no CI/CD                     \\
     \hline
-    Custom PHP & Bespoke & Tailored & No modern stack, no CI/CD \\
-    \hline
-    Social media & Free & Zero setup & No inventory, no analytics \\
+    Social media      & Free          & Zero setup                   & No inventory, no analytics                    \\
     \hline
     \caption{Comparison of existing e-commerce solutions}
     \label{tab:existing_solutions}
@@ -138,16 +149,10 @@ Malltech is composed of three independently deployable services, all running ins
 a shared Docker network on a single VPS:
 
 \begin{figure}[H]
-\centering
-% Replace with actual architecture diagram when available
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Architecture Diagram Placeholder]}\\
-\small Internet $\rightarrow$ Caddy (80/443) $\rightarrow$ \{Frontend :3000, Admin :3000, API :3000\}\\
-API $\rightarrow$ MongoDB\\
-Netdata (monitoring)
-\vspace{2cm}}}
-\caption{High-level deployment architecture of Malltech}
-\label{fig:architecture}
+    \centering
+    \includegraphics[width=0.85\textwidth]{arch.png}
+    \caption{High-level deployment architecture of Malltech}
+    \label{fig:architecture}
 \end{figure}
 
 \section*{Conclusion}
