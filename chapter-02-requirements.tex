@@ -12,19 +12,21 @@ The platform involves four distinct actor types:
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
     \hline
-    \textbf{Actor} & \textbf{Description} \\
+    \textbf{Actor}      & \textbf{Description}                                                                                                                                                                        \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Guest Visitor & An anonymous user browsing the storefront. Their session is tracked server-side to persist a basket without requiring account creation. \\
+    Guest Visitor       & An anonymous user browsing the storefront. Their session is tracked server-side to persist a basket, manage a wishlist, apply coupons, and place orders without requiring account creation. \\
     \hline
-    Registered Customer & A visitor who has created an account. They can place orders, view order history, manage a wishlist, and access an account dashboard. \\
+    Registered Customer & A visitor who has created an account. They can log in, track order status, and manage placed orders.                                                                                        \\
     \hline
-    Administrator & A privileged backoffice user who manages the catalog, orders, customers, content, and site configuration. \\
+    Administrator       & A privileged backoffice user who manages the catalog, promotions, CMS, and site configuration.                                                                                              \\
     \hline
-    Super Administrator & An administrator with the highest privilege level, able to create and manage other admin accounts. \\
+    Super Administrator & An administrator with the highest privilege level, able to manage selling points and admin accounts.                                                                                        \\
+    \hline
+    Cashier             & An admin role assigned to a physical selling point, responsible for processing in-store POS sales, viewing the catalog, managing orders, generating invoices, and issuing credit notes.     \\
     \hline
     \caption{Platform actors}
     \label{tab:actors}
@@ -38,7 +40,7 @@ The platform involves four distinct actor types:
     \item \textbf{FR-AUTH-01:} A visitor can register an account with name, email, password, and phone number.
     \item \textbf{FR-AUTH-02:} A registered user can log in and receive a signed JWT token.
     \item \textbf{FR-AUTH-03:} An anonymous visitor receives a server-managed session cookie on first visit, enabling guest basket persistence.
-    \item \textbf{FR-AUTH-04:} An administrator can log in through a dedicated admin login page.
+    \item \textbf{FR-AUTH-04:} An administrator or cashier can log in through a dedicated admin login page.
     \item \textbf{FR-AUTH-05:} The super admin account is created via a one-time seed script.
     \item \textbf{FR-AUTH-06:} Password reset flow is available for both customers and admins.
 \end{itemize}
@@ -60,29 +62,29 @@ The platform involves four distinct actor types:
 
 \begin{itemize}
     \item \textbf{FR-COM-01:} Any visitor (guest or registered) can add products to a basket, update quantities, and remove items.
-    \item \textbf{FR-COM-02:} A registered user can place an order from their basket, providing a delivery address and selecting a governorate.
+    \item \textbf{FR-COM-02:} Any visitor can place an order from their basket, providing a delivery address and selecting a governorate.
     \item \textbf{FR-COM-03:} Orders progress through a defined status lifecycle: \texttt{pending $\rightarrow$ confirmed $\rightarrow$ processing $\rightarrow$ shipped $\rightarrow$ delivered $\rightarrow$ cancelled}.
-    \item \textbf{FR-COM-04:} Customers can view their order history and track status from their account page.
-    \item \textbf{FR-COM-05:} Administrators can view, filter, search, and update the status of all orders.
-    \item \textbf{FR-COM-06:} A registered user can maintain a wishlist of saved products.
+    \item \textbf{FR-COM-04:} Registered customers can track order status and manage their placed orders from their account dashboard.
+    \item \textbf{FR-COM-05:} Cashiers and Administrators can view, filter, search, and update the status of all orders.
+    \item \textbf{FR-COM-06:} Any visitor can maintain a wishlist of saved products.
     \item \textbf{FR-COM-07:} Shipping rates are configurable per governorate or delivery zone.
 \end{itemize}
 
 \subsection{Promotions and Coupons}
 
 \begin{itemize}
-    \item \textbf{FR-PROMO-01:} Administrators can create promotional campaigns with a percentage or fixed discount, applied to specific categories or site-wide.
-    \item \textbf{FR-PROMO-02:} Administrators can create coupon codes with a discount value, usage limits, and expiry dates.
-    \item \textbf{FR-PROMO-03:} Customers can apply a coupon code at checkout.
-    \item \textbf{FR-PROMO-04:} The system tracks coupon usage per customer to enforce per-user limits.
+    \item \textbf{FR-PROMO-01:} Administrators can create promotional campaigns and coupon codes that apply to specific products, categories, subcategories, brands, or all items.
+    \item \textbf{FR-PROMO-02:} Promotions can be of different types: percentage discount, ``buy X get Y'', or ``buy 1 get another product for free''.
+    \item \textbf{FR-PROMO-03:} Administrators can create coupon codes with usage limits, expiry dates, and the same target and type rules as promotions.
+    \item \textbf{FR-PROMO-04:} Any visitor can apply a coupon code at checkout, and the system tracks usage to enforce limits.
 \end{itemize}
 
 \subsection{Invoicing and Financial Documents}
 
 \begin{itemize}
     \item \textbf{FR-INV-01:} The system auto-generates a sequential invoice number for every confirmed order.
-    \item \textbf{FR-INV-02:} Administrators can generate PDF invoices for any order.
-    \item \textbf{FR-INV-03:} Administrators can issue credit notes (partial or full refund documents) linked to an invoice.
+    \item \textbf{FR-INV-02:} Administrators and Cashiers can generate PDF invoices for any order or create manual invoices.
+    \item \textbf{FR-INV-03:} Administrators and Cashiers can issue credit notes (partial or full refund documents) linked to an invoice.
     \item \textbf{FR-INV-04:} Credit note PDFs are downloadable from the backoffice.
 \end{itemize}
 
@@ -94,6 +96,16 @@ The platform involves four distinct actor types:
     \item \textbf{FR-CMS-03:} Administrators can manage promotional banners displayed on the homepage.
     \item \textbf{FR-CMS-04:} Site-wide configuration (store name, contact info, social links, SEO metadata) is managed via a single site-config form.
     \item \textbf{FR-CMS-05:} Image uploads are handled server-side with automatic optimisation (Sharp).
+\end{itemize}
+\subsection{Selling Points Management}
+
+\begin{itemize}
+    \item \textbf{FR-SP-01:} A selling point represents a commercial entity, which can be the main website or a physical store location.
+    \item \textbf{FR-SP-02:} The Super Administrator can create, update, and delete selling points.
+    \item \textbf{FR-SP-03:} The Super Administrator can assign a Cashier role to a specific physical selling point.
+    \item \textbf{FR-SP-04:} Cashiers can manage sales and operations only within their assigned physical selling point.
+    \item \textbf{FR-SP-05:} Cashiers can browse the product catalog and search for products via text or barcode scanning.
+    \item \textbf{FR-SP-06:} Cashiers can add products to a local basket and process in-store point-of-sale (POS) orders.
 \end{itemize}
 
 \subsection{Customer Support}
@@ -117,35 +129,35 @@ The platform involves four distinct actor types:
 
 \begin{longtable}{|m{1.5cm}|m{2.5cm}|m{9cm}|}
     \hline
-    \textbf{ID} & \textbf{Category} & \textbf{Requirement} \\
+    \textbf{ID} & \textbf{Category} & \textbf{Requirement}                                                                                 \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    NFR-01 & Security & All sensitive routes require authentication. JWT tokens are short-lived and signed with a secret. \\
+    NFR-01      & Security          & All sensitive routes require authentication. JWT tokens are short-lived and signed with a secret.    \\
     \hline
-    NFR-02 & Security & Passwords are hashed with bcrypt. No plaintext credentials in the database. \\
+    NFR-02      & Security          & Passwords are hashed with bcrypt. No plaintext credentials in the database.                          \\
     \hline
-    NFR-03 & Security & HTTP headers hardened with Helmet. CORS restricted to configured origins. \\
+    NFR-03      & Security          & HTTP headers hardened with Helmet. CORS restricted to configured origins.                            \\
     \hline
-    NFR-05 & Security & CI/CD runs Trivy security scans on both filesystem and built Docker images (CRITICAL/HIGH blocking). \\
+    NFR-05      & Security          & CI/CD runs Trivy security scans on both filesystem and built Docker images (CRITICAL/HIGH blocking). \\
     \hline
-    NFR-06 & Performance & Next.js SSR/SSG ensures fast first-paint and good Core Web Vitals on the storefront. \\
+    NFR-06      & Performance       & Next.js SSR/SSG ensures fast first-paint and good Core Web Vitals on the storefront.                 \\
     \hline
-    NFR-07 & Performance & MongoDB indexes on frequently queried fields (slug, category, status). \\
+    NFR-07      & Performance       & MongoDB indexes on frequently queried fields (slug, category, status).                               \\
     \hline
-    NFR-08 & Availability & Zero-downtime deployments via rolling update + health check polling. Automatic rollback on failure. \\
+    NFR-08      & Availability      & Zero-downtime deployments via rolling update + health check polling. Automatic rollback on failure.  \\
     \hline
-    NFR-09 & Availability & Auto-healing script restarts unhealthy containers and sends Discord alerts. \\
+    NFR-09      & Availability      & Auto-healing script restarts unhealthy containers and sends Discord alerts.                          \\
     \hline
-    NFR-10 & Scalability & Stateless API (sessions in MongoDB, files on a mounted volume) allows horizontal scaling. \\
+    NFR-10      & Scalability       & Stateless API (sessions in MongoDB, files on a mounted volume) allows horizontal scaling.            \\
     \hline
-    NFR-11 & Maintainability & NestJS module system enforces separation of concerns. \\
+    NFR-11      & Maintainability   & NestJS module system enforces separation of concerns.                                                \\
     \hline
-    NFR-12 & Usability & Storefront is fully responsive (mobile-first Tailwind CSS). \\
+    NFR-12      & Usability         & Storefront is fully responsive (mobile-first Tailwind CSS).                                          \\
     \hline
-    NFR-13 & Observability & Netdata monitors CPU, memory, disk, and container health with alerting. \\
+    NFR-13      & Observability     & Netdata monitors CPU, memory, disk, and container health with alerting.                              \\
     \hline
     \caption{Non-functional requirements}
     \label{tab:nfr}
@@ -154,28 +166,17 @@ The platform involves four distinct actor types:
 \section{Use Case Diagrams}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Use Case Diagram — Customer Actors]}\\
-\small Guest Visitor \& Registered Customer use cases:\\
-Browse, Search, View Product, Add to Cart, Apply Coupon,\\
-Place Order, Track Order, Wishlist, Blog, Support Chat, Register, Login
-\vspace{2cm}}}
-\caption{Customer use case diagram}
-\label{fig:uc_customer}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/usecaseVistor.png}
+    \caption{Customer use case diagram}
+    \label{fig:uc_customer}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Use Case Diagram — Administrator Actors]}\\
-\small Administrator \& Super Administrator use cases:\\
-Manage Catalog, Manage Orders, Generate Invoices, Issue Credit Notes,\\
-Manage Customers, Manage Promotions/Coupons, Manage CMS,\\
-Configure Site, View Analytics, Manage Admins (Super Admin only)
-\vspace{2cm}}}
-\caption{Administrator use case diagram}
-\label{fig:uc_admin}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/usecaseAdmin.png}
+    \caption{Administrator use case diagram}
+    \label{fig:uc_admin}
 \end{figure}
 
 \section{Selected Use Case Descriptions}
@@ -184,21 +185,21 @@ Configure Site, View Analytics, Manage Admins (Super Admin only)
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
     \hline
-    \textbf{Field} & \textbf{Detail} \\
+    \textbf{Field}   & \textbf{Detail}                                                                                                                                                                                                                                                                                                                                                                \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Actor & Registered Customer \\
+    Actor            & Visitor                                                                                                                                                                                                                                                                                                                                                                        \\
     \hline
-    Precondition & User is authenticated; basket contains at least one item \\
+    Precondition     & Basket contains at least one item                                                                                                                                                                                                                                                                                                                                              \\
     \hline
-    Main Flow & 1. Customer navigates to cart. 2. Clicks ``Proceed to Checkout''. 3. System displays checkout form. 4. Customer submits the form. 5. System validates stock, calculates shipping, applies coupon if present. 6. System creates an order with status \texttt{pending}. 7. Clears the basket. 8. Sends order confirmation email. 9. Redirects to success page. \\
+    Main Flow        & 1. Visitor navigates to cart. 2. Clicks ``Proceed to Checkout''. 3. System displays checkout form. 4. Visitor submits the form. 5. System validates stock, calculates shipping, applies coupon if present. 6. System creates an order with status \texttt{pending}. 7. Clears the basket. 8. Sends order confirmation and acount creation email. 9. Redirects to success page. \\
     \hline
-    Alternative Flow & If a product is out of stock, the system returns a 400 error and the order is not created. \\
+    Alternative Flow & If a product is out of stock, the system returns a 400 error and the order is not created.                                                                                                                                                                                                                                                                                     \\
     \hline
-    Postcondition & Order exists in the database; invoice counter incremented. \\
+    Postcondition    & Order exists in the database.                                                                                                                                                                                                                                                                                                                                                  \\
     \hline
     \caption{UC-01: Place an Order}
     \label{tab:uc01}
@@ -208,17 +209,17 @@ Configure Site, View Analytics, Manage Admins (Super Admin only)
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
     \hline
-    \textbf{Field} & \textbf{Detail} \\
+    \textbf{Field} & \textbf{Detail}                                                                                                                                                                                \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Actor & Administrator \\
+    Actor          & Cashier (and Administrator)                                                                                                                                                                    \\
     \hline
-    Precondition & An invoice exists for the order \\
+    Precondition   & An invoice exists for the order                                                                                                                                                                \\
     \hline
-    Main Flow & 1. Admin opens the invoice. 2. Selects ``Issue Credit Note''. 3. Specifies items to credit and reason. 4. System generates a credit note with a sequential number. 5. Admin downloads the PDF. \\
+    Main Flow      & 1. Admin opens the invoice. 2. Selects ``Issue Credit Note''. 3. Specifies items to credit and reason. 4. System generates a credit note with a sequential number. 5. Admin downloads the PDF. \\
     \hline
     \caption{UC-02: Issue a Credit Note}
     \label{tab:uc02}

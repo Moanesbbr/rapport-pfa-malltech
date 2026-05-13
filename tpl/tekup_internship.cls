@@ -71,9 +71,9 @@
   \DTLnewrow{list}%
   \DTLnewdbentry{list}{sortlabel}{#1}%
   \DTLnewdbentry{list}{description}{%
-      \begin{minipage}[l]{0.10\columnwidth}~\textbf{#1}\end{minipage}%
-      \begin{minipage}[l]{0.05\columnwidth}\textbf{=}\end{minipage}%
-      \begin{minipage}[l]{0.83\columnwidth}#2\end{minipage}%
+    \begin{minipage}[l]{0.10\columnwidth}~\textbf{#1}\end{minipage}%
+    \begin{minipage}[l]{0.05\columnwidth}\textbf{=}\end{minipage}%
+    \begin{minipage}[l]{0.83\columnwidth}#2\end{minipage}%
   }%
 }
 \newenvironment{acronyms}{%
@@ -90,16 +90,17 @@
 \definecolor{tekupBlue}{RGB}{31, 78, 121}
 \definecolor{tekupLightBlue}{RGB}{70, 130, 180}
 
-%================= Minitoc ===============================%
-\usepackage[english]{minitoc}
-\mtcsettitle{minitoc}{Contents}
-\setcounter{minitocdepth}{1}
-\mtcsetrules{minitoc}{off}
-\mtcsetoffset{minitoc}{-1.0em}
-
-\newcommand{\filterminitoc}[1]{#1}
-\renewcommand{\thesection}{\csname filterminitoc \endcsname{\arabic{chapter}.}\arabic{section}}
-\newcommand{\minitocsection}{\begingroup\renewcommand{\filterminitoc}[1]{}\minitoc\endgroup}
+%================= Minitoc (Disabled) ===============================%
+%\usepackage[english]{minitoc}
+%\mtcsettitle{minitoc}{Contents}
+%\setcounter{minitocdepth}{1}
+%\mtcsetrules{minitoc}{off}
+%\mtcsetoffset{minitoc}{-1.0em}
+%
+%\newcommand{\filterminitoc}[1]{#1}
+%\renewcommand{\thesection}{\csname filterminitoc \endcsname{\arabic{chapter}.}\arabic{section}}
+%\newcommand{\minitocsection}{\begingroup\renewcommand{\filterminitoc}[1]{}\minitoc\endgroup}
+\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
 
 %================ Chapter Style =========================%
 \usepackage{pstricks}
@@ -107,29 +108,28 @@
 \def\thickhrulefill{\leavevmode \leaders \hrule height 1.2ex \hfill \kern \z@}
 
 \def\@makechapterhead#1{%
-    \vspace*{30\p@}%
-    {\parindent \z@ \centering \reset@font
-        \thickhrulefill\quad
-        \scshape\bfseries\textit{\@chapapp{}  \thechapter}
-        \quad \thickhrulefill
-        \par\nobreak
-        \vspace*{10\p@}%
-        \interlinepenalty\@M
-        \hrule
-        \vspace*{10\p@}%
-        \Huge \bfseries #1 \par\nobreak
-        \par
-        \vspace*{10\p@}%
-        \hrule
-        \vskip 50\p@
-    }%
-    \minitocsection
-    \thispagestyle{empty}%
-    \newpage
+  \vspace*{30\p@}%
+  {\parindent \z@ \centering \reset@font
+    \thickhrulefill\quad
+    \scshape\bfseries\textit{\@chapapp{}  \thechapter}
+    \quad \thickhrulefill
+    \par\nobreak
+    \vspace*{10\p@}%
+    \interlinepenalty\@M
+    \hrule
+    \vspace*{10\p@}%
+    \Huge \bfseries #1 \par\nobreak
+    \par
+    \vspace*{10\p@}%
+    \hrule
+    \vskip 50\p@
+  }%
+  \thispagestyle{empty}%
+  \newpage
 }
 \def\@makeschapterhead#1{\hbox{%
     \huge\hbox{\textbf{#1}}%
-}\par\vskip 1cm}
+  }\par\vskip 1cm}
 \makeatother
 
 %================ Captions ==============================%
@@ -199,8 +199,8 @@
 %================ Hyperref (last) =======================%
 \usepackage{hyperref}
 \hypersetup{
-    colorlinks=true,
-    linkcolor=tekupBlue,
-    citecolor=tekupBlue,
-    urlcolor=tekupLightBlue
+  colorlinks=true,
+  linkcolor=tekupBlue,
+  citecolor=tekupBlue,
+  urlcolor=tekupLightBlue
 }

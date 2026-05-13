@@ -52,7 +52,7 @@ networking exclusively.
 
 \section{Backend Module Design}
 
-The NestJS backend is organised into 14 feature modules, each encapsulating a
+The NestJS backend is organised into 15 feature modules, each encapsulating a
 distinct business domain:
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
@@ -89,6 +89,8 @@ distinct business domain:
     \hline
     \texttt{LocationsModule} & Tunisian governorates, delivery fee configuration \\
     \hline
+    \texttt{SellingPointsModule} & Physical and digital store locations, cashier assignment \\
+    \hline
     \texttt{AnalyticsModule} & Event recording, aggregate metrics \\
     \hline
     \caption{Backend NestJS modules}
@@ -109,7 +111,7 @@ and their relationships.
 \small Key collections: users, products, categories, subcategories, brands,\\
 stocks, baskets, orders, invoices, creditNotes, coupons, promotions,\\
 supportTickets, supportMessages, banners, blogs, siteConfig, governorates,\\
-analyticsEvents\\
+sellingPoints, analyticsEvents\\
 \vspace{2cm}}}
 \caption{Malltech database entity diagram}
 \label{fig:erd}
