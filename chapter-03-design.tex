@@ -14,17 +14,17 @@ Malltech is decomposed into three independently deployable TypeScript services:
 
 \begin{longtable}{|m{4cm}|m{2.5cm}|m{7cm}|}
     \hline
-    \textbf{Service} & \textbf{Framework} & \textbf{Role} \\
+    \textbf{Service}           & \textbf{Framework} & \textbf{Role}                                           \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    \texttt{malltech-backend} & NestJS 11 & RESTful API, business logic, WebSocket gateway, MongoDB \\
+    \texttt{malltech-backend}  & NestJS 11          & RESTful API, business logic, WebSocket gateway, MongoDB \\
     \hline
-    \texttt{malltech-frontend} & Next.js 16 & Customer storefront (SSR/SSG) \\
+    \texttt{malltech-frontend} & Next.js 16         & Customer storefront (SSR/SSG)                           \\
     \hline
-    \texttt{malltech-admin} & Next.js 16 & Administration backoffice dashboard \\
+    \texttt{malltech-admin}    & Next.js 16         & Administration backoffice dashboard                     \\
     \hline
     \caption{Malltech service decomposition}
     \label{tab:services}
@@ -33,17 +33,10 @@ Malltech is decomposed into three independently deployable TypeScript services:
 \subsection{Deployment Architecture}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Deployment Architecture Diagram]}\\
-\small Internet $\rightarrow$ OVH VPS $\rightarrow$ Caddy (reverse proxy, TLS)\\
-Caddy $\rightarrow$ \{malltech-frontend, malltech-admin, malltech-backend\}\\
-malltech-backend $\leftrightarrow$ MongoDB\\
-Netdata (monitoring all containers)\\
-GitHub Actions (CI/CD pipelines)
-\vspace{2cm}}}
-\caption{Malltech deployment architecture}
-\label{fig:deployment}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/DeploymentArchitecture.png}
+    \caption{Malltech deployment architecture}
+    \label{fig:deployment}
 \end{figure}
 
 All containers share a \texttt{malltech} Docker bridge network. Only Caddy
@@ -57,41 +50,41 @@ distinct business domain:
 
 \begin{longtable}{|m{3.5cm}|m{10cm}|}
     \hline
-    \textbf{Module} & \textbf{Responsibilities} \\
+    \textbf{Module}              & \textbf{Responsibilities}                                     \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    \texttt{AuthModule} & JWT strategy, session strategy, guards, password hashing \\
+    \texttt{AuthModule}          & JWT strategy, session strategy, guards, password hashing      \\
     \hline
-    \texttt{UsersModule} & Customer CRUD, profile management \\
+    \texttt{UsersModule}         & Customer CRUD, profile management                             \\
     \hline
-    \texttt{CatalogModule} & Categories, subcategories, brands, products, stock, 3D models \\
+    \texttt{CatalogModule}       & Categories, subcategories, brands, products, stock, 3D models \\
     \hline
-    \texttt{BasketModule} & Guest and authenticated basket operations \\
+    \texttt{BasketModule}        & Guest and authenticated basket operations                     \\
     \hline
-    \texttt{OrdersModule} & Order placement, status transitions, history \\
+    \texttt{OrdersModule}        & Order placement, status transitions, history                  \\
     \hline
-    \texttt{PromotionsModule} & Campaign management, automatic discount application \\
+    \texttt{PromotionsModule}    & Campaign management, automatic discount application           \\
     \hline
-    \texttt{CouponsModule} & Coupon CRUD, validation, usage tracking \\
+    \texttt{CouponsModule}       & Coupon CRUD, validation, usage tracking                       \\
     \hline
-    \texttt{InvoicesModule} & Sequential invoice numbering, PDF generation \\
+    \texttt{InvoicesModule}      & Sequential invoice numbering, PDF generation                  \\
     \hline
-    \texttt{CreditNotesModule} & Credit note issuance, PDF generation \\
+    \texttt{CreditNotesModule}   & Credit note issuance, PDF generation                          \\
     \hline
-    \texttt{SupportModule} & WebSocket gateway, ticket management, Discord bridge \\
+    \texttt{SupportModule}       & WebSocket gateway, ticket management, Discord bridge          \\
     \hline
-    \texttt{NotificationsModule} & Email templates, SMTP dispatch \\
+    \texttt{NotificationsModule} & Email templates, SMTP dispatch                                \\
     \hline
-    \texttt{CmsModule} & Banners, blogs, authors, site configuration \\
+    \texttt{CmsModule}           & Banners, blogs, authors, site configuration                   \\
     \hline
-    \texttt{LocationsModule} & Tunisian governorates, delivery fee configuration \\
+    \texttt{LocationsModule}     & Tunisian governorates, delivery fee configuration             \\
     \hline
-    \texttt{SellingPointsModule} & Physical and digital store locations, cashier assignment \\
+    \texttt{SellingPointsModule} & Physical and digital store locations, cashier assignment      \\
     \hline
-    \texttt{AnalyticsModule} & Event recording, aggregate metrics \\
+    \texttt{AnalyticsModule}     & Event recording, aggregate metrics                            \\
     \hline
     \caption{Backend NestJS modules}
     \label{tab:modules}
@@ -105,157 +98,125 @@ and their relationships.
 \subsection{Key Collections}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Entity Relationship Diagram]}\\
-\small Key collections: users, products, categories, subcategories, brands,\\
-stocks, baskets, orders, invoices, creditNotes, coupons, promotions,\\
-supportTickets, supportMessages, banners, blogs, siteConfig, governorates,\\
-sellingPoints, analyticsEvents\\
-\vspace{2cm}}}
-\caption{Malltech database entity diagram}
-\label{fig:erd}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/keycollection.png}
+    \caption{Malltech database entity diagram}
+    \label{fig:erd}
 \end{figure}
 
-\subsection{Product Data Model}
-
-The product schema captures the following key fields:
-
-\begin{longtable}{|m{3cm}|m{2.5cm}|m{8cm}|}
-    \hline
-    \textbf{Field} & \textbf{Type} & \textbf{Description} \\
-    \hline
-    \endhead
-    \endfoot
-    \endlastfoot
-    \hline
-    \texttt{\_id} & ObjectId & MongoDB document identifier \\
-    \hline
-    \texttt{name} & String & Product display name \\
-    \hline
-    \texttt{slug} & String & URL-friendly identifier (indexed, unique) \\
-    \hline
-    \texttt{description} & String & Rich product description \\
-    \hline
-    \texttt{price} & Number & Base price in TND \\
-    \hline
-    \texttt{discountPrice} & Number & Optional promotional price \\
-    \hline
-    \texttt{images} & String{[]} & Array of image URLs \\
-    \hline
-    \texttt{category} & ObjectId & Reference to Category \\
-    \hline
-    \texttt{subcategory} & ObjectId & Reference to Subcategory \\
-    \hline
-    \texttt{brand} & ObjectId & Reference to Brand \\
-    \hline
-    \texttt{modelUrl} & String & Optional GLB 3D model URL \\
-    \hline
-    \texttt{isPublished} & Boolean & Storefront visibility flag \\
-    \hline
-    \caption{Product collection schema (key fields)}
-    \label{tab:product_schema}
-\end{longtable}
-
-\subsection{Order Data Model}
-
-The order schema captures the complete commercial transaction:
-
-\begin{longtable}{|m{3cm}|m{2.5cm}|m{8cm}|}
-    \hline
-    \textbf{Field} & \textbf{Type} & \textbf{Description} \\
-    \hline
-    \endhead
-    \endfoot
-    \endlastfoot
-    \hline
-    \texttt{user} & ObjectId & Reference to the ordering customer \\
-    \hline
-    \texttt{items} & Array & Line items (product, qty, unitPrice, total) \\
-    \hline
-    \texttt{status} & Enum & pending / confirmed / processing / shipped / delivered / cancelled \\
-    \hline
-    \texttt{deliveryAddress} & Object & Street, city, governorate, postal code \\
-    \hline
-    \texttt{shippingFee} & Number & Computed from governorate rate \\
-    \hline
-    \texttt{coupon} & ObjectId & Applied coupon reference \\
-    \hline
-    \texttt{discount} & Number & Coupon discount amount \\
-    \hline
-    \texttt{subtotal} & Number & Sum of line totals \\
-    \hline
-    \texttt{total} & Number & subtotal + shippingFee - discount \\
-    \hline
-    \caption{Order collection schema (key fields)}
-    \label{tab:order_schema}
-\end{longtable}
 
 \section{API Design}
 
-\subsection{REST API Structure}
+\subsection{REST Conventions}
 
-The API follows REST conventions with resource-based URL routing:
+The API follows standard REST conventions:
 
-\begin{longtable}{|m{5cm}|m{2cm}|m{6.5cm}|}
+\begin{itemize}
+    \item Base URL: \texttt{https://api.domain.com}
+    \item All routes are prefixed: \texttt{/auth}, \texttt{/products}, \texttt{/orders}, \texttt{/admin}, etc.
+    \item JSON request/response bodies
+    \item HTTP status codes: \texttt{200 OK}, \texttt{201 Created}, \texttt{400 Bad Request}, \texttt{401 Unauthorized}, \texttt{403 Forbidden}, \texttt{404 Not Found}, \texttt{409 Conflict}
+    \item Pagination: query params \texttt{?page=1\&limit=20}, response includes \texttt{\{ data, total, page, totalPages \}}
+\end{itemize}
+
+\subsection{Key API Endpoints (Selected)}
+
+\begin{longtable}{|m{1.5cm}|m{4.5cm}|m{2cm}|m{6cm}|}
     \hline
-    \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\
+    \textbf{Method} & \textbf{Endpoint}                        & \textbf{Auth} & \textbf{Description}                  \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    \texttt{/auth/login} & POST & Authenticate and receive JWT \\
+    POST            & \texttt{/auth/register}                  & Public        & Register new customer                 \\
     \hline
-    \texttt{/auth/register} & POST & Create a customer account \\
+    POST            & \texttt{/auth/login}                     & Public        & Login, returns JWT                    \\
     \hline
-    \texttt{/products} & GET & List products (filterable, paginated) \\
+    GET             & \texttt{/products}                       & Public        & List products (filterable, paginated) \\
     \hline
-    \texttt{/products/:slug} & GET & Get single product by slug \\
+    GET             & \texttt{/products/search}                & Public        & Full-text product search              \\
     \hline
-    \texttt{/basket} & GET/POST/PUT/DELETE & Basket CRUD \\
+    GET             & \texttt{/products/:slug}                 & Public        & Product detail                        \\
     \hline
-    \texttt{/orders} & POST & Place an order \\
+    GET             & \texttt{/categories}                     & Public        & Category tree                         \\
     \hline
-    \texttt{/orders/my} & GET & Customer order history \\
+    POST            & \texttt{/basket/add}                     & Guest/Auth    & Add item to basket                    \\
     \hline
-    \texttt{/admin/orders} & GET & Admin — all orders \\
+    GET             & \texttt{/basket}                         & Guest/Auth    & Get current basket                    \\
     \hline
-    \texttt{/admin/orders/:id/status} & PATCH & Admin — update order status \\
+    POST            & \texttt{/orders}                         & Auth          & Place order                           \\
     \hline
-    \texttt{/admin/invoices/:id/pdf} & GET & Admin — download invoice PDF \\
+    GET             & \texttt{/orders/my}                      & Auth          & Customer's order history              \\
     \hline
-    \caption{Selected API endpoints}
+    POST            & \texttt{/orders/:id/coupon}              & Auth          & Apply coupon to order                 \\
+    \hline
+    GET             & \texttt{/wishlist}                       & Auth          & Get wishlist                          \\
+    \hline
+    POST            & \texttt{/wishlist/:productId}            & Auth          & Toggle wishlist item                  \\
+    \hline
+    GET             & \texttt{/governorates}                   & Public        & List governorates                     \\
+    \hline
+    GET             & \texttt{/blogs}                          & Public        & Blog article listing                  \\
+    \hline
+    POST            & \texttt{/support/tickets}                & Guest/Auth    & Open support ticket                   \\
+    \hline
+    GET             & \texttt{/admin/orders}                   & Admin         & All orders, filterable                \\
+    \hline
+    PATCH           & \texttt{/admin/orders/:id/status}        & Admin         & Update order status                   \\
+    \hline
+    POST            & \texttt{/admin/invoices/:id/pdf}         & Admin         & Generate invoice PDF                  \\
+    \hline
+    POST            & \texttt{/admin/invoices/:id/credit-note} & Admin         & Issue credit note                     \\
+    \hline
+    GET             & \texttt{/admin/analytics/events}         & Admin         & Analytics event data                  \\
+    \hline
+    \caption{Key API Endpoints}
     \label{tab:api_endpoints}
 \end{longtable}
 
-\subsection{Authentication Flow}
+\subsection{WebSocket — Support Gateway}
+
+The support module exposes a Socket.IO namespace for real-time messaging:
+
+\begin{longtable}{|m{3.5cm}|m{3cm}|m{7.5cm}|}
+    \hline
+    \textbf{Event}                  & \textbf{Direction}          & \textbf{Payload}                 \\
+    \hline
+    \endhead
+    \endfoot
+    \endlastfoot
+    \hline
+    \texttt{join\_ticket}           & Client $\rightarrow$ Server & \texttt{\{ ticketId \}}          \\
+    \hline
+    \texttt{send\_message}          & Client $\rightarrow$ Server & \texttt{\{ ticketId, content \}} \\
+    \hline
+    \texttt{new\_message}           & Server $\rightarrow$ Client & \texttt{\{ ticketId, message \}} \\
+    \hline
+    \texttt{ticket\_status\_update} & Server $\rightarrow$ Client & \texttt{\{ ticketId, status \}}  \\
+    \hline
+    \caption{WebSocket Events for Support}
+    \label{tab:ws_events}
+\end{longtable}
+
+\section{Sequence Diagrams}
+
+\subsection{Product Search Flow}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[Authentication Sequence Diagram]}\\
-\small JWT Flow: Client $\rightarrow$ POST /auth/login $\rightarrow$ API validates credentials $\rightarrow$ Returns JWT\\
-Subsequent requests: Client sends \texttt{Authorization: Bearer <token>} $\rightarrow$ JwtGuard validates\\
-Guest Flow: First request $\rightarrow$ Session created in MongoDB $\rightarrow$ Cookie set\\
-\vspace{2cm}}}
-\caption{Dual authentication flow}
-\label{fig:auth_flow}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/searchSeqDiagram.png}
+    \caption{Product search sequence}
+    \label{fig:seq_search}
 \end{figure}
 
 \subsection{Order Placement Flow}
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Order Placement Sequence Diagram]}\\
-\small Client $\rightarrow$ POST /orders\\
-1. Load basket \quad 2. Verify stock (atomic) \quad 3. Calculate shipping\\
-4. Apply coupon \quad 5. Persist order \quad 6. Decrement stock\\
-7. Clear basket \quad 8. Send confirmation email (async)\\
-\vspace{2.5cm}}}
-\caption{Order placement sequence}
-\label{fig:order_flow}
+    \centering
+    \includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{img/orderSeqDigram.png}
+    \caption{Order placement sequence}
+    \label{fig:order_flow}
 \end{figure}
 
 \section*{Conclusion}
