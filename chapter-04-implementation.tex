@@ -12,39 +12,39 @@ NestJS module internals to Next.js storefront patterns and admin dashboard featu
 
 \begin{longtable}{|m{4.5cm}|m{2cm}|m{7cm}|}
     \hline
-    \textbf{Technology} & \textbf{Version} & \textbf{Role} \\
+    \textbf{Technology}             & \textbf{Version} & \textbf{Role}                          \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Node.js & 20 LTS & Runtime \\
+    Node.js                         & 20 LTS           & Runtime                                \\
     \hline
-    TypeScript & 5.7 & Language \\
+    TypeScript                      & 5.7              & Language                               \\
     \hline
-    NestJS & 11 & Web framework + DI container \\
+    NestJS                          & 11               & Web framework + DI container           \\
     \hline
-    MongoDB & 7.0 & Primary database \\
+    MongoDB                         & 7.0              & Primary database                       \\
     \hline
-    Mongoose & --- & ODM \\
+    Mongoose                        & ---              & ODM                                    \\
     \hline
-    Passport.js + JWT & --- & Authentication strategies \\
+    Passport.js + JWT               & ---              & Authentication strategies              \\
     \hline
-    express-session + connect-mongo & --- & Guest session persistence \\
+    express-session + connect-mongo & ---              & Guest session persistence              \\
     \hline
-    Socket.IO & --- & WebSocket / real-time \\
+    Socket.IO                       & ---              & WebSocket / real-time                  \\
     \hline
-    Multer + Sharp & --- & File upload and image optimisation \\
+    Multer + Sharp                  & ---              & File upload and image optimisation     \\
     \hline
-    Nodemailer & --- & SMTP email \\
+    Nodemailer                      & ---              & SMTP email                             \\
     \hline
-    Discord.js & --- & Support bot \\
+    Discord.js                      & ---              & Support bot                            \\
     \hline
-    PDFKit & --- & Invoice and credit-note PDF generation \\
+    PDFKit                          & ---              & Invoice and credit-note PDF generation \\
     \hline
-    class-validator & --- & DTO validation \\
+    class-validator                 & ---              & DTO validation                         \\
     \hline
-    Helmet & --- & HTTP security headers \\
+    Helmet                          & ---              & HTTP security headers                  \\
     \hline
     \caption{Backend technology stack}
     \label{tab:backend_stack}
@@ -54,29 +54,29 @@ NestJS module internals to Next.js storefront patterns and admin dashboard featu
 
 \begin{longtable}{|m{4.5cm}|m{9cm}|}
     \hline
-    \textbf{Technology} & \textbf{Role} \\
+    \textbf{Technology}              & \textbf{Role}                     \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Next.js 16 + React 19 & Framework (App Router, SSR/SSG) \\
+    Next.js 16 + React 19            & Framework (App Router, SSR/SSG)   \\
     \hline
-    Tailwind CSS + Radix UI & Styling and accessible components \\
+    Tailwind CSS + Radix UI          & Styling and accessible components \\
     \hline
-    Zustand & Client state (cart, wishlist, UI) \\
+    Zustand                          & Client state (cart, wishlist, UI) \\
     \hline
-    React Query & Server state management \\
+    React Query                      & Server state management           \\
     \hline
-    Axios & HTTP client \\
+    Axios                            & HTTP client                       \\
     \hline
-    Socket.IO client & Real-time support chat \\
+    Socket.IO client                 & Real-time support chat            \\
     \hline
-    DataTables.net + ApexCharts & Admin tables and analytics charts \\
+    DataTables.net + ApexCharts      & Admin tables and analytics charts \\
     \hline
-    react-dropzone + react-easy-crop & Image upload and cropping \\
+    react-dropzone + react-easy-crop & Image upload and cropping         \\
     \hline
-    Barcode scanning libraries & Admin barcode/QR lookup \\
+    Barcode scanning libraries       & Admin barcode/QR lookup           \\
     \hline
     \caption{Frontend and admin technology stack}
     \label{tab:frontend_stack}
@@ -167,12 +167,10 @@ availability badge, Add to Cart / Wishlist buttons, an optional 3D model viewer,
 and related products.
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Screenshot: Storefront homepage — hero banner and featured products]}
-\vspace{2.5cm}}}
-\caption{Malltech customer storefront homepage}
-\label{fig:storefront_home}
+    \centering
+    \includegraphics[width=0.85\textwidth, height=0.6\textheight, keepaspectratio]{img/storeHomepage.png}
+    \caption{Malltech customer storefront homepage}
+    \label{fig:storefront_home}
 \end{figure}
 
 \subsection{Cart and Checkout}
@@ -182,49 +180,41 @@ collects the delivery address, a governorate dropdown, and an optional coupon co
 field with real-time validation. On submission, the form posts to \texttt{POST /orders}.
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Screenshot: Cart page and Checkout form]}
-\vspace{2.5cm}}}
-\caption{Cart and checkout pages}
-\label{fig:checkout}
+    \centering
+    \textbf{Cart Page}\par\smallskip
+    \includegraphics[width=0.75\textwidth, height=0.35\textheight, keepaspectratio]{img/cart.png}
+
+    \vspace{0.5cm}
+    \textbf{Checkout Form}\par\smallskip
+    \includegraphics[width=0.75\textwidth, height=0.35\textheight, keepaspectratio]{img/checkout.png}
+    \caption{Cart and checkout pages}
+    \label{fig:checkout}
 \end{figure}
 
 \section{Admin Dashboard Implementation}
 
-\subsection{Dashboard Overview}
 
-The admin homepage displays key KPIs (total orders, revenue, new customers,
-low-stock alerts) and charts (ApexCharts): a daily orders trend line, revenue bar
-chart, and top products donut chart.
-
-\begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Screenshot: Admin dashboard with KPI cards and charts]}
-\vspace{2.5cm}}}
-\caption{Administration dashboard overview}
-\label{fig:admin_dashboard}
-\end{figure}
 
 \subsection{Product Management and Barcode Scanner}
 
 The product list uses DataTables.net with server-side pagination, search by name/SKU,
 and filter by category, brand, and status. The product creation/edit form handles
 multi-image upload with drag-and-drop and in-browser cropping.
-
 The \textbf{barcode scanner page} activates the device camera, decodes the barcode
 using a cascade of three libraries (\texttt{@yudiel/react-qr-scanner},
 \texttt{@undecaf/zbar-wasm}, \texttt{@zxing/library}), calls the GO\_UPC lookup
-API, and pre-populates a new product form — eliminating manual data entry.
+API, and pre-populates a new product form eliminating manual data entry.
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Screenshot: Admin product list and barcode scanner page]}
-\vspace{2.5cm}}}
-\caption{Admin product management and barcode scanner}
-\label{fig:admin_products}
+    \centering
+    \textbf{Admin Product List}\par\smallskip
+    \includegraphics[width=0.8\textwidth, height=0.35\textheight, keepaspectratio]{img/productList.png}
+
+    \vspace{0.5cm}
+    \textbf{Barcode Scanner Page}\par\smallskip
+    \includegraphics[width=0.45\textwidth, height=0.35\textheight, keepaspectratio]{img/barcodeScan.jpeg}
+    \caption{Admin product management and barcode scanner}
+    \label{fig:admin_products}
 \end{figure}
 
 \subsection{Order Management}
@@ -235,12 +225,10 @@ with confirmation dialog, one-click PDF invoice download, and a credit note issu
 form.
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}
-\textit{[Screenshot: Admin order detail with status update and invoice button]}
-\vspace{2.5cm}}}
-\caption{Admin order management page}
-\label{fig:admin_orders}
+    \centering
+    \includegraphics[width=0.8\textwidth, height=0.6\textheight, keepaspectratio]{img/orderdetails.png}
+    \caption{Admin order management page}
+    \label{fig:admin_orders}
 \end{figure}
 
 \section{Notable Implementation Decisions}

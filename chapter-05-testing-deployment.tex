@@ -14,17 +14,17 @@ The project adopts a pragmatic three-layer testing pyramid:
 
 \begin{longtable}{|m{3.5cm}|m{3cm}|m{7cm}|}
     \hline
-    \textbf{Layer} & \textbf{Tools} & \textbf{Scope} \\
+    \textbf{Layer}    & \textbf{Tools}            & \textbf{Scope}                             \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    Unit Tests & Jest & Service methods, pure functions, DTOs \\
+    Unit Tests        & Jest                      & Service methods, pure functions, DTOs      \\
     \hline
-    Integration Tests & Jest + Mongoose in-memory & Service-level with real DB logic \\
+    Integration Tests & Jest + Mongoose in-memory & Service-level with real DB logic           \\
     \hline
-    E2E Tests & Supertest + jest-e2e & Critical API flows (auth, order placement) \\
+    E2E Tests         & Supertest + jest-e2e      & Critical API flows (auth, order placement) \\
     \hline
     \caption{Testing pyramid layers}
     \label{tab:testing_pyramid}
@@ -82,14 +82,10 @@ All three services have independent GitHub Actions workflows triggered on push t
 the \texttt{main} branch, divided into five sequential stages:
 
 \begin{figure}[H]
-\centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}
-\textit{[CI/CD Pipeline Diagram]}\\
-\small Test $\rightarrow$ Security $\rightarrow$ Build \& Push (GHCR) $\rightarrow$ Deploy (VPS) $\rightarrow$ Notify (Discord)\\
-Deploy failure $\rightarrow$ Auto-rollback (re-tag previous image digest)
-\vspace{2cm}}}
-\caption{GitHub Actions CI/CD pipeline — five stages}
-\label{fig:cicd}
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/PipelineDiagram.png}
+    \caption{GitHub Actions CI/CD pipeline — five stages}
+    \label{fig:cicd}
 \end{figure}
 
 \subsection{Stage Details}
@@ -123,25 +119,25 @@ a rolling update:
 
 \begin{longtable}{|m{4.5cm}|m{9cm}|}
     \hline
-    \textbf{Secret} & \textbf{Purpose} \\
+    \textbf{Secret}                   & \textbf{Purpose}               \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    \texttt{VPS\_HOST} & SSH target hostname \\
+    \texttt{VPS\_HOST}                & SSH target hostname            \\
     \hline
-    \texttt{VPS\_USER} & SSH user \\
+    \texttt{VPS\_USER}                & SSH user                       \\
     \hline
-    \texttt{VPS\_SSH\_KEY} & SSH private key \\
+    \texttt{VPS\_SSH\_KEY}            & SSH private key                \\
     \hline
-    \texttt{GHCR\_USER} & GitHub Container Registry user \\
+    \texttt{GHCR\_USER}               & GitHub Container Registry user \\
     \hline
-    \texttt{GHCR\_PAT} & GitHub Container Registry PAT \\
+    \texttt{GHCR\_PAT}                & GitHub Container Registry PAT  \\
     \hline
-    \texttt{DISCORD\_WEBHOOK} & Deployment notifications \\
+    \texttt{DISCORD\_WEBHOOK}         & Deployment notifications       \\
     \hline
-    \texttt{NEXT\_PUBLIC\_{}API\_URL} & Baked into Next.js builds \\
+    \texttt{NEXT\_PUBLIC\_{}API\_URL} & Baked into Next.js builds      \\
     \hline
     \caption{GitHub Actions secrets}
     \label{tab:secrets}
@@ -173,21 +169,21 @@ HTTP requests to HTTPS.
 
 \begin{longtable}{|m{3cm}|m{3cm}|m{7.5cm}|}
     \hline
-    \textbf{Volume} & \textbf{Container} & \textbf{Purpose} \\
+    \textbf{Volume}        & \textbf{Container} & \textbf{Purpose}              \\
     \hline
     \endhead
     \endfoot
     \endlastfoot
     \hline
-    \texttt{mongodb\_data} & mongodb & Database files \\
+    \texttt{mongodb\_data} & mongodb            & Database files                \\
     \hline
-    \texttt{api\_storage} & api & Uploaded product images, PDFs \\
+    \texttt{api\_storage}  & api                & Uploaded product images, PDFs \\
     \hline
-    \texttt{caddy\_data} & caddy & TLS certificates \\
+    \texttt{caddy\_data}   & caddy              & TLS certificates              \\
     \hline
-    \texttt{caddy\_config} & caddy & Caddy runtime configuration \\
+    \texttt{caddy\_config} & caddy              & Caddy runtime configuration   \\
     \hline
-    \texttt{netdata\_*} & netdata & Monitoring data \\
+    \texttt{netdata\_*}    & netdata            & Monitoring data               \\
     \hline
     \caption{Docker volume mapping}
     \label{tab:volumes}
@@ -218,33 +214,6 @@ the script:
 
 This provides a self-healing first response layer before manual intervention is required.
 
-\section{Pre-Production Checklist}
-
-\begin{longtable}{|m{8cm}|m{4.5cm}|}
-    \hline
-    \textbf{Item} & \textbf{Status} \\
-    \hline
-    \endhead
-    \endfoot
-    \endlastfoot
-    \hline
-    Enable \texttt{forbidNonWhitelisted} on \texttt{Validation\-Pipe} & Pending \\
-    \hline
-    Configure \texttt{@nestjs/throttler} rate limiting & Pending \\
-    \hline
-    Set \texttt{secure: true} on session cookie & Pending \\
-    \hline
-    Audit and tighten CORS origins & Pending \\
-    \hline
-    Enable MongoDB authentication & Configured \\
-    \hline
-    Rotate all secrets (JWT, session, DB passwords) & Pre-launch \\
-    \hline
-    Set up automated \texttt{mongodump} backup strategy & Pending \\
-    \hline
-    \caption{Pre-production checklist}
-    \label{tab:preprod}
-\end{longtable}
 
 \section*{Conclusion}
 This chapter covered the full quality and delivery pipeline: unit and E2E testing
